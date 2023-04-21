@@ -1,5 +1,6 @@
 import { FunctionComponent, useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import BlackBackdrop from "../Common/BlackBackdrop";
 
 interface ModalNotificationProps {
   type: string;
@@ -19,6 +20,7 @@ const ModalNotification: FunctionComponent<ModalNotificationProps> = ({
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
+  // deriving state
   const isCloseModalAutomatically = timeLeft === 0;
 
   useEffect(() => {
@@ -78,10 +80,10 @@ const ModalNotification: FunctionComponent<ModalNotificationProps> = ({
           <p>({timeLeft})</p>
         </button>
       </div>
-      <div
-        onClick={() => setError("")}
-        className="fixed top-0 left-0 w-full h-full z-20 bg-black/60"
-      ></div>
+      <BlackBackdrop
+        onCloseBlackBackdrop={() => setError("")}
+        className="!z-20"
+      />
     </>
   );
 };

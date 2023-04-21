@@ -16,14 +16,17 @@ import {
   getMovieBannerInfo,
   getTVBannerInfo,
 } from "../services/home";
-import { HomeFilms, Item } from "../shared/types";
+import { BannerInfo, HomeFilms, Item } from "../shared/types";
 import { useAppSelector } from "../store/hooks";
+import { useAutoAnimate } from "@formkit/auto-animate/react";
+
 const Home: FC = () => {
   const currentUser = useAppSelector((state) => state.auth.user);
   const [currentTab, setCurrentTab] = useState(
     localStorage.getItem("currentTab") || "tv"
   );
   const [isSidebarActive, setIsSidebarActive] = useState(false);
+  const [parent] = useAutoAnimate();
 
   const {
     data: dataMovie,
@@ -37,7 +40,7 @@ const Home: FC = () => {
     isLoading: isLoadingMovieDetail,
     isError: isErrorMovieDetail,
     error: errorMovieDetail,
-  } = useQuery<any, Error>(
+  } = useQuery<BannerInfo[], Error>(
     ["detailMovies", dataMovie?.Trending],
     () => getMovieBannerInfo(dataMovie?.Trending as Item[]),
     { enabled: !!dataMovie?.Trending }
@@ -55,7 +58,7 @@ const Home: FC = () => {
     isLoading: isLoadingTVDetail,
     isError: isErrorTVDetail,
     error: errorTVDetail,
-  } = useQuery<any, Error>(
+  } = useQuery<BannerInfo[], Error>(
     ["detailTvs", dataTV?.Trending],
     () => getTVBannerInfo(dataTV?.Trending as Item[]),
     { enabled: !!dataTV?.Trending }
@@ -71,7 +74,7 @@ const Home: FC = () => {
 
   return (
     <>
-      <Title value="Moonlight | Watching Website" />
+      <Title value="Moonlight | Watch Films You Like" />
 
       <div className="flex md:hidden justify-between items-center px-5 my-5">
         <Link to="/" className="flex gap-2 items-center">
@@ -94,7 +97,11 @@ const Home: FC = () => {
           isSidebarActive={isSidebarActive}
         />
 
-        <div className="flex-grow md:pt-7 pt-0 pb-7 border-x md:px-[2vw] px-[4vw] border-gray-darken min-h-screen">
+        <div
+          // @ts-ignore
+          ref={parent}
+          className="flex-grow md:pt-7 pt-0 pb-7 border-x md:px-[2vw] px-[4vw] border-gray-darken min-h-screen"
+        >
           <div className="flex justify-between md:items-end items-center">
             <div className="inline-flex gap-[40px] pb-[14px] border-b border-gray-darken relative">
               <button

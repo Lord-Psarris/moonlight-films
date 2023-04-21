@@ -3,7 +3,6 @@ import { FunctionComponent, useState } from "react";
 import { FiChevronDown, FiChevronRight } from "react-icons/fi";
 import { useSearchParams } from "react-router-dom";
 import Select from "react-select";
-import { useCurrentParams } from "../../hooks/useCurrentParams";
 
 interface SortByProps {}
 
@@ -34,9 +33,7 @@ const SortBy: FunctionComponent<SortByProps> = () => {
       backgroundColor: isSelected ? "#989898" : "#49494b",
     }),
 
-    singleValue: (provided: any) => {
-      return { ...provided, color: "white" };
-    },
+    singleValue: (provided: any) => ({ ...provided, color: "white" }),
 
     menu: (styles: any) => ({
       ...styles,
@@ -44,15 +41,16 @@ const SortBy: FunctionComponent<SortByProps> = () => {
     }),
   };
 
-  const [currentSearchParams] = useCurrentParams();
+  // const [currentSearchParams] = useCurrentParams();
 
   const chooseSort = (option: any) => {
-    const sortValue = option?.value || "";
+    // setSearchParams({
+    //   ...currentSearchParams,
+    //   sort_by:  option?.value || "",
+    // });
 
-    setSearchParams({
-      ...currentSearchParams,
-      sort_by: sortValue,
-    });
+    searchParams.set("sort_by", option?.value || "");
+    setSearchParams(searchParams);
   };
 
   const sortType = searchParams.get("sort_by") || "popularity.desc";
@@ -75,12 +73,9 @@ const SortBy: FunctionComponent<SortByProps> = () => {
           <Select
             options={options}
             styles={customStyles}
-            // defaultValue={}
             defaultValue={options[0]}
             value={options.find((option) => option.value === sortType)}
             // @ts-ignore
-            // onChange={(e) => onChangeConfig("sort_by", e?.value)}
-            // onChange={(e) => setSearchParams({ sort_by: e?.value })}
             onChange={chooseSort}
           />
         </div>

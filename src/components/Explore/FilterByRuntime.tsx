@@ -1,29 +1,23 @@
 import React, { FunctionComponent, useEffect, useRef, useState } from "react";
-import { useLocation, useSearchParams } from "react-router-dom";
-import { useCurrentParams } from "../../hooks/useCurrentParams";
+import { useSearchParams } from "react-router-dom";
+import { MAX_RUNTIME, GAP } from "../../shared/constants";
+interface FilterByRuntimeProps {}
 
-interface FilterByRatingProps {}
-
-const MAX_RUNTIME = 200;
-const GAP = 20;
-
-const FilterByRating: FunctionComponent<FilterByRatingProps> = () => {
+const FilterByRuntime: FunctionComponent<FilterByRuntimeProps> = () => {
   const sliderRangeRef = useRef<HTMLDivElement>(null!);
-  const location = useLocation();
 
   const [minRuntime, setMinRuntime] = useState(0);
   const [maxRuntime, setMaxRuntime] = useState(200);
 
   const timeoutRef = useRef<any>(null);
   const [searchParams, setSearchParams] = useSearchParams();
-  const [currentSearchParams] = useCurrentParams();
 
   useEffect(() => {
     updateMinRangeBar(Number(searchParams.get("minRuntime")) ?? 0);
     updateMaxRangeBar(Number(searchParams.get("maxRuntime")) || 200);
 
     // eslint-disable-next-line
-  }, [location.search]);
+  }, [window.location.search]);
 
   const updateMinRangeBar = (value: number) => {
     setMinRuntime(value);
@@ -48,10 +42,8 @@ const FilterByRating: FunctionComponent<FilterByRatingProps> = () => {
       );
 
       timeoutRef.current = setTimeout(() => {
-        setSearchParams({
-          ...currentSearchParams,
-          minRuntime: e.target.value,
-        });
+        searchParams.set("minRuntime", e.target.value);
+        setSearchParams(searchParams);
       }, 500);
     } else {
       updateMaxRangeBar(
@@ -61,16 +53,14 @@ const FilterByRating: FunctionComponent<FilterByRatingProps> = () => {
       );
 
       timeoutRef.current = setTimeout(() => {
-        setSearchParams({
-          ...currentSearchParams,
-          maxRuntime: e.target.value,
-        });
+        searchParams.set("maxRuntime", e.target.value);
+        setSearchParams(searchParams);
       }, 500);
     }
   };
 
   return (
-    <div>
+    <section>
       <div className="flex justify-between mb-3">
         <div className="flex gap-2 items-center">
           <span>From</span>
@@ -91,12 +81,14 @@ const FilterByRating: FunctionComponent<FilterByRatingProps> = () => {
           </p>
         </div>
       </div>
+
       <div className="relative h-[5px] bg-dark-darken rounded-md">
         <div
           ref={sliderRangeRef}
           className="absolute top-0 h-[5px] bg-primary rounded-md"
         ></div>
       </div>
+
       <div className="relative">
         <input
           className="absolute -top-[5px] left-0 w-full h-[5px] appearance-none [background:none] pointer-events-none tw-slider-range"
@@ -119,8 +111,8 @@ const FilterByRating: FunctionComponent<FilterByRatingProps> = () => {
           onChange={handleDragSliderRange}
         />
       </div>
-    </div>
+    </section>
   );
 };
 
-export default FilterByRating;
+export default FilterByRuntime;

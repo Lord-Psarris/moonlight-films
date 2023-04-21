@@ -18,7 +18,6 @@ const Explore: FunctionComponent<ExploreProps> = () => {
     localStorage.getItem("currentTab") || "tv"
   );
   const { isMobile } = useCurrentViewportView();
-
   const [isShowScrollUpBtn, setIsShowScrollUpBtn] = useState(false);
   const [isSidebarActive, setIsSidebarActive] = useState(false);
 
@@ -37,33 +36,16 @@ const Explore: FunctionComponent<ExploreProps> = () => {
     return () => window.removeEventListener("scroll", checkIfShowScrollUpBtn);
   }, []);
 
-  const scrollToTop = () => {
+  const scrollToTop = () =>
     window.scrollTo({
       top: 0,
       behavior: "smooth",
     });
-  };
 
   const [searchParams, setSearchParams] = useSearchParams();
-  // const initialConfig = {} as { [key: string]: string };
-
-  // queryParams.forEach((value, key) => (initialConfig[key] = value));
-
   const [config, setConfig] = useState<ConfigType>({});
 
   useEffect(() => {
-    // const changeConfig = (key: string, value: string) => {
-    //   const clone = JSON.parse(JSON.stringify(config));
-    //   clone[key] = value;
-    //   setConfig(clone);
-    // };
-
-    // setConfig((prevConfig) => ({
-    //   ...prevConfig,
-    //   sort_by: sortType,
-    //   with_genres: genreType.toString(),
-    // }));
-
     const changeConfig = (key: string, value: string | number) => {
       setConfig((prevConfig) => ({
         ...prevConfig,
@@ -90,23 +72,22 @@ const Explore: FunctionComponent<ExploreProps> = () => {
     changeConfig("air_date.lte", releaseTo);
 
     // eslint-disable-next-line
-  }, [location.search]);
+  }, [window.location.search]);
   return (
     <>
-      <Title value={"Explore | Moonlight"} />
-      {isShowScrollUpBtn && (
-        <button
-          onClick={scrollToTop}
-          className={`fixed bottom-[30px] right-[30px] z-10 transition duration-500 ${
-            isShowScrollUpBtn ? "opacity-100" : "opacity-0"
-          }`}
-        >
-          <BsFillArrowUpCircleFill
-            size={35}
-            className="text-primary hover:brightness-75 transition duration-300"
-          />
-        </button>
-      )}
+      <Title value="Explore | Moonlight" />
+
+      <button
+        onClick={scrollToTop}
+        className={`fixed bottom-[30px] right-[30px] z-10 transition duration-500 ${
+          !isShowScrollUpBtn && "opacity-0 pointer-events-none"
+        }`}
+      >
+        <BsFillArrowUpCircleFill
+          size={35}
+          className="text-primary hover:brightness-75 transition duration-300"
+        />
+      </button>
 
       <div className="flex md:hidden justify-between items-center px-5 my-5">
         <Link to="/" className="flex gap-2 items-center">
@@ -191,17 +172,3 @@ const Explore: FunctionComponent<ExploreProps> = () => {
 };
 
 export default Explore;
-
-// const [config, setConfig] = useState<{ [key: string]: string }>(
-//   JSON.parse(localStorage.getItem("config") || "{}")
-// );
-
-// const changeConfig = (key: string, value: string) => {
-//   const clone = JSON.parse(JSON.stringify(config));
-//   clone[key] = value;
-//   setConfig(clone);
-// };
-
-// useEffect(() => {
-//   localStorage.setItem("config", JSON.stringify(config));
-// }, [config]);

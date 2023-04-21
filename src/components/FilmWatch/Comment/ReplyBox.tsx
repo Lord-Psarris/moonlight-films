@@ -23,6 +23,12 @@ const ReplyBox: FunctionComponent<ReplyBoxProps> = ({ commendId }) => {
     if (!commentInputValue) return;
 
     setIsSendingComment(true);
+    // CHANGE THISSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+    // CHANGE THISSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+    // CHANGE THISSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+    // CHANGE THISSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+    // CHANGE THISSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+    // CHANGE THISSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
     addDoc(collection(db, `replyTo-${commendId}`), {
       user: currentUser,
       value: commentInputValue.trim().slice(0, 500),
@@ -56,7 +62,7 @@ const ReplyBox: FunctionComponent<ReplyBoxProps> = ({ commendId }) => {
         <div className="w-10 h-10 rounded-full border-[3px] border-t-transparent border-primary animate-spin"></div>
       ) : (
         <button>
-          <MdSend size={30} className="text-primary " />
+          <MdSend size={30} className="text-primary" />
         </button>
       )}
     </form>

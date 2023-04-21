@@ -53,9 +53,10 @@ const ProfileImage: FunctionComponent<ProfileImageProps> = () => {
             src={currentUser?.photoURL || "/defaultAvatar.jpg"}
             alt="profile picture"
             className="w-[250px] h-[250px] rounded-full object-cover"
+            effect="blur"
           />
           {isUpdatingImg && (
-            <div className="border-[4px] border-dark border-t-transparent h-12 w-12 rounded-full animate-spin absolute top-[40%] left-[40%] z-10"></div>
+            <div className="border-[4px] border-primary border-t-transparent h-12 w-12 rounded-full animate-spin absolute top-[40%] left-[40%] z-10"></div>
           )}
         </div>
 

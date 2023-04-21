@@ -23,13 +23,14 @@ import { setCurrentUser } from "./store/slice/authSlice";
 function App() {
   const location = useLocation();
   const dispatch = useAppDispatch();
-  // const currentUser = useAppSelector((state) => state.auth.user);
-  const [isSignedIn, setIsSignedIn] = useState(
+
+  const [isSignedIn, setIsSignedIn] = useState<boolean>(
     Number(localStorage.getItem("isSignedIn")) ? true : false
   );
 
   useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
+    let unSubDoc: () => void;
+    const unSubAuth: () => void = onAuthStateChanged(auth, (user) => {
       if (!user) {
         dispatch(setCurrentUser(null));
         setIsSignedIn(false);
@@ -41,7 +42,7 @@ function App() {
       localStorage.setItem("isSignedIn", "1");
 
       if (user.providerData[0].providerId === "google.com") {
-        onSnapshot(doc(db, "users", user.uid), (doc) => {
+        unSubDoc = onSnapshot(doc(db, "users", user.uid), (doc) => {
           dispatch(
             setCurrentUser({
               displayName:
@@ -54,7 +55,7 @@ function App() {
           );
         });
       } else if (user.providerData[0].providerId === "facebook.com") {
-        onSnapshot(doc(db, "users", user.uid), (doc) => {
+        unSubDoc = onSnapshot(doc(db, "users", user.uid), (doc) => {
           dispatch(
             setCurrentUser({
               displayName:
@@ -69,7 +70,7 @@ function App() {
           );
         });
       } else {
-        onSnapshot(doc(db, "users", user.uid), (doc) => {
+        unSubDoc = onSnapshot(doc(db, "users", user.uid), (doc) => {
           dispatch(
             setCurrentUser({
               displayName:
@@ -83,10 +84,18 @@ function App() {
         });
       }
     });
+
+    return () => {
+      unSubAuth();
+      unSubDoc();
+    };
   }, [dispatch]);
 
   useEffect(() => {
-    window.scrollTo(0, 0);
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   }, [location.pathname, location.search]);
 
   return (
@@ -109,7 +118,11 @@ function App() {
       />
       <Route
         path="history"
-        element={<Protected isSignedIn={isSignedIn}>{<History />}</Protected>}
+        element={
+          <Protected isSignedIn={isSignedIn}>
+            <History />
+          </Protected>
+        }
       />
       <Route
         path="profile"
